@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transparencia - Sindicato Jalpan de Serra (STSMJ)</title>
+    <style>
+        :root {
+            --primary: #1b4332;
+            --secondary: #2d6a4f;
+            --accent: #52b788;
+            --bg: #f8f9fa;
+            --footer-bg: #081c15;     
+        }
+
+        body { font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6; background-color: var(--bg); color: #333; margin: 0; padding: 0; }
+        
+        .page-container {
+            max-width: 1100px;
+            margin: 0 auto 40px auto;
+            background: white;
+            padding-bottom: 20px;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header-banner { width: 100%; height: auto; display: block; border-bottom: 4px solid var(--primary); }
+
+        .image-center-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin: 20px 40px;
+        }
+        .image-center-group a { 
+            display: block; 
+            max-width: 45%; 
+            transition: transform 0.2s ease;
+        }
+        .image-center-group a:hover {
+            transform: scale(1.02);
+        }
+        .image-center-group img { 
+            width: 100%; 
+            height: auto; 
+            border-radius: 8px; 
+            border: 1px solid #ddd; 
+        }
+
+        header { text-align: center; padding: 20px 40px 10px 40px; }
+        h1 { margin: 0; color: var(--primary); font-size: 2.5rem; text-transform: uppercase; }
+        .subtitulo-main { color: var(--secondary); font-weight: bold; font-size: 1.1rem; margin-bottom: 20px; }
+        
+        h2 { 
+            color: var(--primary); 
+            border-bottom: 2px solid var(--accent); 
+            padding-bottom: 5px; 
+            margin: 40px 40px 10px 40px; 
+            font-size: 1.8rem;
+        }
+
+        .articulo-card { border: 1px solid #ddd; margin: 0 40px 12px 40px; border-radius: 8px; transition: all 0.3s ease; }
+        .articulo-header { 
+            padding: 18px; 
+            cursor: pointer; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            background: #fff; 
+            color: var(--primary); 
+        }
+        .articulo-header:hover { background: #f0f7f4; }
+
+        .numero-fraccion { font-size: 1.25rem; font-weight: 800; margin-right: 10px; color: var(--secondary); }
+        .titulo-fraccion { font-size: 1.05rem; font-weight: 600; }
+
+        .articulo-body { display: none; padding: 20px; background: #fafafa; border-top: 1px solid #e0e0e0; }
+        .active .articulo-body { display: block; }
+        .active .articulo-header { background: #f0f7f4; border-bottom: 1px solid #e0e0e0; }
+
+        .panel-opciones { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
+        
+        .btn-interactivo, .btn-directo { 
+            background: var(--primary); color: white; padding: 8px 16px; border-radius: 5px; 
+            text-decoration: none; font-size: 0.9rem; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; border: none;
+            transition: background 0.2s;
+        }
+        .btn-interactivo:hover, .btn-directo:hover { background: var(--secondary); }
+
+        .no-aplica { color: #888; font-style: italic; background: #eee; padding: 5px 12px; border-radius: 4px; font-size: 0.9rem; }
+
+        .modal {
+            display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.6); backdrop-filter: blur(3px);
+        }
+        .modal-content {
+            background-color: white; margin: 5% auto; padding: 30px; border-radius: 12px;
+            width: 80%; max-width: 600px; box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            animation: slideDown 0.3s ease-out;
+        }
+        @keyframes slideDown { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        
+        .modal-header { border-bottom: 2px solid var(--accent); padding-bottom: 10px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .modal-header h3 { margin: 0; color: var(--primary); }
+        .close-modal { font-size: 28px; font-weight: bold; cursor: pointer; color: #aaa; }
+        .close-modal:hover { color: var(--secondary); }
+
+        .descargas-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-height: 400px; overflow-y: auto; padding-right: 10px; }
+        .año-seccion { grid-column: 1 / -1; background: #eef2f0; padding: 8px 15px; font-weight: bold; color: var(--primary); border-radius: 4px; margin-top: 15px; }
+        .btn-descarga {
+            display: flex; justify-content: space-between; align-items: center; background: white;
+            border: 1px solid #ddd; padding: 12px; border-radius: 6px; text-decoration: none; color: #333; transition: 0.2s; font-size: 0.9rem;
+        }
+        .btn-descarga:hover { border-color: var(--accent); background: #f0f7f4; transform: translateY(-2px); }
+        .btn-descarga span { font-weight: bold; color: var(--secondary); font-size: 0.75rem; border: 1px solid var(--secondary); padding: 2px 4px; border-radius: 3px; }
+
+        footer { background-color: var(--footer-bg); color: white; text-align: center; padding: 40px 20px; margin-top: 40px; }
+        .footer-bold { font-weight: bold; color: var(--accent); text-transform: uppercase; margin-bottom: 15px; font-size: 1.1rem; }
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+    <img src="logo-stsmj.png" alt="Sindicato Jalpan de Serra" class="header-banner">
+
+    <div class="image-center-group">
+        <a href="https://consultapublicamx.plataformadetransparencia.org.mx/vut-web/faces/view/consultaPublica.xhtml?idEntidad=MjI=&idOrgano=MjI=&idSujetoObligado=MTUyNzY=#inicio" target="_blank">
+            <img src="pnt_consulta.png" alt="Consulta Obligaciones">
+        </a>
+        <a href="https://www.plataformadetransparencia.org.mx/Inicio" target="_blank">
+            <img src="plataforma_nacional_de_transparencia.png" alt="Plataforma Nacional">
+        </a>
+    </div>
+
+    <header>
+        <h1>TRANSPARENCIA</h1>
+        <p class="subtitulo-main">Sindicato de Trabajadores al Servicio del Municipio de Jalpan de Serra (STSMJ)</p>
+    </header>
+
+    <h2>Artículo 66</h2>
+    <div id="contenedor-art66"></div>
+
+    <h2>Artículo 77 - Obligaciones Específicas del Sindicato</h2>
+    <div id="contenedor-art77"></div>
+</div>
+
+<div id="miModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modalTitulo">Formatos de Descarga</h3>
+            <span class="close-modal" onclick="cerrarModal()">&times;</span>
+        </div>
+        <div id="modalCuerpo" class="descargas-grid"></div>
+    </div>
+</div>
+
+<footer>
+    <p class="footer-bold">SINDICATO DE TRABAJADORES AL SERVICIO DEL MUNICIPIO DE JALPAN DE SERRA</p>
+</footer>
+
+<script>
+    const datosArt66 = [
+        { id: "Tabla", titulo: "Tabla de aplicabilidad", desc: "Tabla de aplicabilidad general.", fecha: "17/04/2026", opciones: ["Tabla de aplicabilidad"] },
+        { id: "I", titulo: "Marco Normativo", desc: "Leyes, códigos, reglamentos, decretos...", fecha: "17/04/2026", opciones: ["Marco normativo"] },
+        { id: "II", titulo: "Estructura Orgánica", desc: "Estructura orgánica completa y organigrama.", fecha: "17/04/2026", opciones: ["Estructura orgánica", "Organigrama"] },
+        { id: "III", titulo: "Atribuciones y Metas", desc: "Estatutos Internos, Metas y Objetivos.", fecha: "17/04/2026", opciones: ["Estatutos Internos", "Metas y Objetivos"] },
+        { id: "IV", titulo: "Indicadores de Interés Público", desc: "Temas de interés público o trascendencia social.", fecha: "17/04/2026", opciones: [] },
+        { id: "V", titulo: "Indicadores de Resultados", desc: "Indicadores de objetivos y resultados.", fecha: "17/04/2026", opciones: [] },
+        { id: "VI", titulo: "Directorio", desc: "Directorio de servidores públicos.", fecha: "20/07/2023", opciones: ["Directorio de Servidores Públicos"] },
+        { id: "VII", titulo: "Tabuladores de Remuneración", desc: "Los tabuladores de remuneraciones.", fecha: "17/04/2026", opciones: [] },
+        { id: "VIII", titulo: "Gastos de Representación", desc: "Tabuladores de gastos de representación y viáticos.", fecha: "17/04/2026", opciones: ["Gastos de representación"] },
+        { id: "IX", titulo: "Plazas", desc: "Número total de plazas, base y confianza.", fecha: "17/04/2026", opciones: [] },
+        { id: "X", titulo: "Honorarios", desc: "Contrataciones de servicios profesionales.", fecha: "17/04/2026", opciones: [] },
+        { id: "XI", titulo: "Declaraciones Patrimoniales", desc: "Versión Pública de las declaraciones.", fecha: "17/04/2026", opciones: [] },
+        { id: "XII", titulo: "Unidad de Transparencia", desc: "Domicilio y dirección electrónica para solicitudes.", fecha: "17/04/2026", opciones: ["Unidad de Transparencia"] },
+        { id: "XIII", titulo: "Convocatorias", desc: "Concursos para ocupar cargos públicos.", fecha: "17/04/2026", opciones: [] },
+        { id: "XIV", titulo: "Subsidios y Programas", desc: "Programas de subsidios, estímulos y apoyos.", fecha: "17/04/2026", opciones: [] },
+        { id: "XV", titulo: "Condiciones Laborales", desc: "Estatutos internos y recursos entregados.", fecha: "20/07/2023", opciones: ["Estatutos Internos", "Recursos entregados a los sindicatos"] },
+        { id: "XVI", titulo: "Información Curricular", desc: "Curriculum desde jefe de departamento.", fecha: "19/01/2026", opciones: ["Información curricular"] },
+        { id: "XVII", titulo: "Sanciones", desc: "Servidores públicos con sanciones definitivas.", fecha: "17/04/2026", opciones: [] },
+        { id: "XVIII", titulo: "Servicios", desc: "Requisitos para acceder a servicios.", fecha: "17/04/2026", opciones: ["Servicios"] },
+        { id: "XIX", titulo: "Trámites", desc: "Requisitos y formatos de trámites.", fecha: "17/04/2026", opciones: ["Trámites"] },
+        { id: "XX", titulo: "Presupuesto", desc: "Presupuesto asignado anual e informes trimestrales.", fecha: "20/07/2023", opciones: ["Presupuesto asignado anual"] },
+        { id: "XXI", titulo: "Deuda Pública", desc: "Información relativa a deuda pública.", fecha: "17/04/2026", opciones: [] },
+        { id: "XXII", titulo: "Publicidad Oficial", desc: "Gastos de comunicación y publicidad oficial.", fecha: "17/04/2026", opciones: ["Contratación de servicios de publicidad"] },
+        { id: "XXIII", titulo: "Auditorías", desc: "Resultados de las auditorías presupuestales.", fecha: "17/04/2026", opciones: ["Resultados de auditorías"] },
+        { id: "XXIV", titulo: "Estados Financieros", desc: "Dictaminación de estados financieros.", fecha: "17/04/2026", opciones: [] },
+        { id: "XXV", titulo: "Recursos Públicos", desc: "Personas que usen recursos públicos.", fecha: "20/07/2023", opciones: ["Personas a quienes se les asigna recursos públicos"] },
+        { id: "XXVI", titulo: "Concesiones", desc: "Concesiones, contratos, convenios y permisos.", fecha: "17/04/2026", opciones: ["Concesiones, contratos, convenios, permisos otorgados"] },
+        { id: "XXVII", titulo: "Licitaciones", desc: "Adjudicaciones directas y licitaciones.", fecha: "17/04/2026", opciones: [] },
+        { id: "XXVIII", titulo: "Informes", desc: "Informes generados por disposición legal.", fecha: "17/04/2026", opciones: ["Informes"] },
+        { id: "XXIX", titulo: "Estadísticas", desc: "Estadísticas en cumplimiento de facultades.", fecha: "17/04/2026", opciones: ["Estadísticas"] },
+        { id: "XXX", titulo: "Balances", desc: "Balances generales y estado financiero.", fecha: "17/04/2026", opciones: [] },
+        { id: "XXXI", titulo: "Proveedores", desc: "Padrón de proveedores y contratistas.", fecha: "17/04/2026", opciones: [] },
+        { id: "XXXII", titulo: "Convenios Privados", desc: "Convenios con sector social y privado.", fecha: "17/04/2026", opciones: [] },
+        { id: "XXXIII", titulo: "Inventario de Bienes", desc: "Bienes muebles, inmuebles y donaciones.", fecha: "17/04/2026", opciones: ["Bienes muebles", "Bienes inmuebles"] },
+        { id: "XXXIV", titulo: "Derechos Humanos", desc: "Recomendaciones de organismos garantes.", fecha: "17/04/2026", opciones: [] },
+        { id: "XXXV", titulo: "Laudos", desc: "Resoluciones y laudos emitidos.", fecha: "17/04/2026", opciones: [] },
+        { id: "XXXVI", titulo: "Participación", desc: "Mecanismos de participación ciudadana.", fecha: "17/04/2026", opciones: [] },
+        { id: "XXXVII", titulo: "Programas", desc: "Programas, objetivos y requisitos.", fecha: "17/04/2026", opciones: [] },
+        { id: "XXXVIII", titulo: "Comité Transparencia", desc: "Actas y resoluciones del comité.", fecha: "17/04/2026", opciones: ["Actas y sesiones"] },
+        { id: "XXXIX", titulo: "Encuestas", desc: "Evaluaciones a programas financiados.", fecha: "17/04/2026", opciones: [] },
+        { id: "XL", titulo: "Estudios", desc: "Estudios financiados con recursos públicos.", fecha: "17/04/2026", opciones: ["Estudios financiados"] },
+        { id: "XLI", titulo: "Jubilados", desc: "Listado de jubilados y pensionados.", fecha: "17/04/2026", opciones: [] },
+        { id: "XLII", titulo: "Ingresos", desc: "Ingresos recibidos y responsables.", fecha: "20/07/2023", opciones: ["Ingresos recibidos"] },
+        { id: "XLIII", titulo: "Donaciones", desc: "Donaciones hechas a terceros.", fecha: "17/04/2026", opciones: [] },
+        { id: "XLIV", titulo: "Archivos", desc: "Catálogo y guía de archivo documental.", fecha: "17/04/2026", opciones: ["Inventarios documentales"] },
+        { id: "XLV", titulo: "Actas Consejos", desc: "Actas de sesiones y recomendaciones.", fecha: "17/04/2026", opciones: [] },
+        { id: "XLVI", titulo: "Telecomunicaciones", desc: "Estadísticas de solicitudes técnicas.", fecha: "17/04/2026", opciones: [] },
+        { id: "XLVII", titulo: "Utilidad", desc: "Preguntas frecuentes y transparencia proactiva.", fecha: "17/04/2026", opciones: ["Información de interés público"] }
+    ];
+
+    const datosArt77 = [
+        { id: "I", titulo: "Convenios", desc: "Contratos y convenios.", fecha: "17/04/2026", opciones: ["Convenios"] },
+        { id: "II", titulo: "Comité Ejecutivo", desc: "Directorio.", fecha: "19/01/2026", opciones: ["Directorio"] },
+        { id: "III", titulo: "Padrón de Socios", desc: "Padrón actualizado.", fecha: "17/04/2026", opciones: ["Padrón de socios"] },
+        { id: "IV", titulo: "Recursos Públicos", desc: "Relación de recursos económicos.", fecha: "17/04/2026", opciones: ["Recursos económicos"] }
+    ];
+
+    function abrirModal(nombreDoc) {
+        const modal = document.getElementById("miModal");
+        const cuerpo = document.getElementById("modalCuerpo");
+        const titulo = document.getElementById("modalTitulo");
+
+        titulo.innerText = `Archivo: ${nombreDoc}`;
+        cuerpo.innerHTML = ""; 
+
+        const añoActual = 2026;
+        let tReferenciaTope = 1; 
+        let añoInicio = 2022;
+
+        if (nombreDoc === "Estructura orgánica" || nombreDoc === "Organigrama") {
+            tReferenciaTope = 1; 
+        }
+        
+        // Se añade Estatutos Internos al rango que inicia en 2020
+        if (nombreDoc === "Organigrama" || nombreDoc === "Metas y Objetivos" || nombreDoc === "Estatutos Internos") {
+            añoInicio = 2020;
+        }
+
+        for (let año = añoActual; año >= añoInicio; año--) {
+            const labelAño = document.createElement("div");
+            labelAño.className = "año-seccion";
+            labelAño.innerText = `Ejercicio ${año}`;
+            cuerpo.appendChild(labelAño);
+
+            let tFin = (año === añoActual) ? tReferenciaTope : 4;
+            let tInicio = 1;
+            
+            // Ajuste para documentos que solo existen desde el T2 de 2022 (excepto los históricos)
+            if (año === 2022 && (nombreDoc !== "Organigrama" && nombreDoc !== "Metas y Objetivos" && nombreDoc !== "Estatutos Internos")) tInicio = 2;
+
+            for (let t = tFin; t >= tInicio; t--) {
+                const btn = document.createElement("a");
+                btn.className = "btn-descarga";
+                let extShow = "XLSX"; 
+                
+                // --- LÓGICA DE ORGANIGRAMA ---
+                if (nombreDoc === "Organigrama") {
+                    let nomFile = "";
+                    if ((año === 2026 && t === 1) || (año === 2025) || (año === 2024) || (año === 2023) || (año === 2022 && t >= 2)) {
+                        nomFile = `LTAIPEQArt66FraccIIB.T${t}${año.toString().slice(-2)}.xlsx`;
+                        extShow = "XLSX";
+                    } else if (año === 2022 && t === 1) {
+                         nomFile = "ORGANIGRAMA_COMITE_2021-2024.pdf";
+                         extShow = "PDF";
+                    } else if (año === 2021 && t === 4) {
+                        nomFile = "ORGANIGRAMA_COMITE_2021-2024.pdf";
+                        extShow = "PDF";
+                    } else if ((año === 2021 && t <= 3) || (año === 2020)) {
+                        nomFile = "organigrama_del_stsmj.pdf";
+                        extShow = "PDF";
+                    }
+                    btn.href = nomFile || "#";
+                    if(nomFile) btn.setAttribute("download", nomFile);
+                }
+                // --- LÓGICA DE METAS Y OBJETIVOS ---
+                else if (nombreDoc === "Metas y Objetivos") {
+                    let nomFile = "";
+                    if ((año === 2020) || (año === 2021) || (año === 2022 && t === 1)) {
+                        nomFile = "OBJETIVOS-Y-METAS-INSTITUCIONALES-DEL-STSMJ.pdf";
+                        extShow = "PDF";
+                    } else if ((año === 2022 && t >= 2) || (año === 2023) || (año === 2024) || (año === 2025) || (año === 2026 && t === 1)) {
+                        nomFile = `LTAIPEQArt66FraccIIIB.T${t}${año.toString().slice(-2)}.xlsx`;
+                        extShow = "XLSX";
+                    }
+                    btn.href = nomFile || "#";
+                    if(nomFile) btn.setAttribute("download", nomFile);
+                }
+                // --- LÓGICA DE ESTATUTOS INTERNOS (NUEVA ACTUALIZACIÓN) ---
+                else if (nombreDoc === "Estatutos Internos") {
+                    let nomFile = "";
+                    // Histórico PDF (2020-T1 al 2022-T1)
+                    if ((año === 2020) || (año === 2021) || (año === 2022 && t === 1)) {
+                        nomFile = "ESTATUTOS-INTERNOS-DEL-S.T.S.M.J..pdf";
+                        extShow = "PDF";
+                    } 
+                    // XLSX (2022-T2 al 2026-T1)
+                    else if ((año === 2022 && t >= 2) || (año === 2023) || (año === 2024) || (año === 2025) || (año === 2026 && t === 1)) {
+                        nomFile = `LTAIPEQArt66FraccIIIA.T${t}${año.toString().slice(-2)}.xlsx`;
+                        extShow = "XLSX";
+                    }
+                    btn.href = nomFile || "#";
+                    if(nomFile) btn.setAttribute("download", nomFile);
+                }
+                // --- LÓGICA DE ESTRUCTURA ORGÁNICA ---
+                else if (nombreDoc === "Estructura orgánica") {
+                    if (año === 2022) {
+                        if (t === 2) btn.href = "LTAIPEQArt66FraccIIA.xlsx";
+                        else if (t === 3) btn.href = "LTAIPEQArt66-FraccIIA.xlsx";
+                        else if (t === 4) btn.href = "LTAIPEQArt66FraccIIA..xlsx";
+                    } else if (año >= 2023) {
+                        btn.href = `LTAIPEQArt66FraccIIA.T${t}${año.toString().slice(-2)}.xlsx`;
+                    }
+                    btn.setAttribute("download", btn.href);
+                } 
+                else {
+                    btn.href = "#";
+                }
+
+                btn.innerHTML = `Trimestre ${t} <span>${extShow}</span>`;
+                
+                if (btn.getAttribute("href") === "#") {
+                    btn.onclick = (e) => {
+                        e.preventDefault();
+                        alert(`El archivo solicitado para ${nombreDoc} (${año}-T${t}) no está disponible.`);
+                    };
+                }
+                cuerpo.appendChild(btn);
+            }
+        }
+        modal.style.display = "block";
+    }
+
+    function cerrarModal() { document.getElementById("miModal").style.display = "none"; }
+    window.onclick = function(event) { if (event.target == document.getElementById("miModal")) cerrarModal(); }
+
+    function generarHTML(lista, contenedorId) {
+        const contenedor = document.getElementById(contenedorId);
+        lista.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'articulo-card';
+            const botones = item.opciones.length > 0 ? item.opciones.map(op => {
+                if (op === "Tabla de aplicabilidad") return `<a href="TABLA_ARTICULOS_66_Y_77.xlsx" download class="btn-directo">📊 Descargar Tabla (.xlsx)</a>`;
+                if (op === "Marco normativo") return `<a href="LTAIPEQArt66FraccI.xlsx" download class="btn-directo">⚖️ Descargar Marco Normativo (.xlsx)</a>`;
+                return `<button class="btn-interactivo" onclick="event.stopPropagation(); abrirModal('${op}')">📄 ${op}</button>`;
+            }).join('') : '<span class="no-aplica">No Aplica</span>';
+            
+            const tagFraccion = item.id !== 'Tabla' ? `<span class="numero-fraccion">Fracción ${item.id}.</span>` : '';
+            div.innerHTML = `<div class="articulo-header" onclick="this.parentElement.classList.toggle('active')"><div>${tagFraccion}<span class="titulo-fraccion">${item.titulo}</span></div><span>▼</span></div><div class="articulo-body"><span style="font-size: 0.8rem; color: #666; display:block; margin-bottom:10px;">Actualización: ${item.fecha}</span><p>${item.desc}</p><div class="panel-opciones">${botones}</div></div>`;
+            contenedor.appendChild(div);
+        });
+    }
+
+    generarHTML(datosArt66, 'contenedor-art66');
+    generarHTML(datosArt77, 'contenedor-art77');
+</script>
+</body>
+</html>
