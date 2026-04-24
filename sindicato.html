@@ -61,6 +61,14 @@
             font-size: 1.8rem;
         }
 
+        .art64-box {
+            margin: 0 40px 30px 40px;
+            padding: 20px;
+            background: #f1f3f2;
+            border-left: 5px solid var(--primary);
+            border-radius: 4px;
+        }
+
         .articulo-card { border: 1px solid #ddd; margin: 0 40px 12px 40px; border-radius: 8px; transition: all 0.3s ease; }
         .articulo-header { 
             padding: 18px; 
@@ -118,6 +126,9 @@
 
         footer { background-color: var(--footer-bg); color: white; text-align: center; padding: 40px 20px; margin-top: 40px; }
         .footer-bold { font-weight: bold; color: var(--accent); text-transform: uppercase; margin-bottom: 15px; font-size: 1.1rem; }
+
+        /* Estilo para el contacto en Fracción XII */
+        .contacto-info { background: #fff; border: 1px solid var(--accent); padding: 15px; border-radius: 8px; line-height: 1.8; color: #444; }
     </style>
 </head>
 <body>
@@ -138,6 +149,11 @@
         <h1>TRANSPARENCIA</h1>
         <p class="subtitulo-main">Sindicato de Trabajadores al Servicio del Municipio de Jalpan de Serra (STSMJ)</p>
     </header>
+
+    <h2>Artículo 64</h2>
+    <div class="art64-box">
+        <p>Los sujetos obligados deberán publicar y mantener actualizada la información pública, de conformidad con los lineamientos expedidos por el Sistema Nacional, la cual deberá estar disponible de manera gratuita...</p>
+    </div>
 
     <h2>Artículo 66</h2>
     <div id="contenedor-art66"></div>
@@ -170,11 +186,17 @@
         { id: "V", titulo: "Indicadores de Resultados", desc: "Indicadores de objetivos y resultados.", fecha: "17/04/2026", opciones: [] },
         { id: "VI", titulo: "Directorio", desc: "Directorio de servidores públicos.", fecha: "20/07/2023", opciones: ["Directorio de Servidores Públicos"] },
         { id: "VII", titulo: "Tabuladores de Remuneración", desc: "Los tabuladores de remuneraciones.", fecha: "17/04/2026", opciones: [] },
-        { id: "VIII", titulo: "Gastos de Representación", desc: "Tabuladores de gastos de representación y viáticos.", fecha: "17/04/2026", opciones: ["Gastos de representación"] },
+        { id: "VIII", titulo: "Gastos de Representación", desc: "Tabuladores de gastos de representación y viáticos.", fecha: "23/04/2026", opciones: ["Gastos de representación"] },
         { id: "IX", titulo: "Plazas", desc: "Número total de plazas, base y confianza.", fecha: "17/04/2026", opciones: [] },
         { id: "X", titulo: "Honorarios", desc: "Contrataciones de servicios profesionales.", fecha: "17/04/2026", opciones: [] },
         { id: "XI", titulo: "Declaraciones Patrimoniales", desc: "Versión Pública de las declaraciones.", fecha: "17/04/2026", opciones: [] },
-        { id: "XII", titulo: "Unidad de Transparencia", desc: "Domicilio y dirección electrónica para solicitudes.", fecha: "17/04/2026", opciones: ["Unidad de Transparencia"] },
+        { 
+            id: "XII", 
+            titulo: "Unidad de Transparencia", 
+            desc: "<div class='contacto-info'><strong>Ma. Leticia Salinas Benítez</strong><br>Andador Vicente Guerrero 19<br>Col. Centro<br>Jalpan de Serra, Querétaro<br>Tel 441 296 1627<br>stsmjtransparencia@outlook.com</div>", 
+            fecha: "17/04/2026", 
+            opciones: [] 
+        },
         { id: "XIII", titulo: "Convocatorias", desc: "Concursos para ocupar cargos públicos.", fecha: "17/04/2026", opciones: [] },
         { id: "XIV", titulo: "Subsidios y Programas", desc: "Programas de subsidios, estímulos y apoyos.", fecha: "17/04/2026", opciones: [] },
         { id: "XV", titulo: "Condiciones Laborales", desc: "Estatutos internos y recursos entregados.", fecha: "20/07/2023", opciones: ["Estatutos Internos", "Recursos entregados a los sindicatos"] },
@@ -235,100 +257,94 @@
             tReferenciaTope = 1; 
         }
         
-        // Se añade Estatutos Internos al rango que inicia en 2020
-        if (nombreDoc === "Organigrama" || nombreDoc === "Metas y Objetivos" || nombreDoc === "Estatutos Internos") {
+        if (nombreDoc === "Organigrama" || nombreDoc === "Metas y Objetivos" || nombreDoc === "Estatutos Internos" || nombreDoc === "Directorio de Servidores Públicos" || nombreDoc === "Gastos de representación") {
             añoInicio = 2020;
         }
 
         for (let año = añoActual; año >= añoInicio; año--) {
-            const labelAño = document.createElement("div");
-            labelAño.className = "año-seccion";
-            labelAño.innerText = `Ejercicio ${año}`;
-            cuerpo.appendChild(labelAño);
-
             let tFin = (año === añoActual) ? tReferenciaTope : 4;
             let tInicio = 1;
-            
-            // Ajuste para documentos que solo existen desde el T2 de 2022 (excepto los históricos)
-            if (año === 2022 && (nombreDoc !== "Organigrama" && nombreDoc !== "Metas y Objetivos" && nombreDoc !== "Estatutos Internos")) tInicio = 2;
+            let botonesDelAño = [];
 
             for (let t = tFin; t >= tInicio; t--) {
                 const btn = document.createElement("a");
                 btn.className = "btn-descarga";
                 let extShow = "XLSX"; 
-                
-                // --- LÓGICA DE ORGANIGRAMA ---
-                if (nombreDoc === "Organigrama") {
-                    let nomFile = "";
-                    if ((año === 2026 && t === 1) || (año === 2025) || (año === 2024) || (año === 2023) || (año === 2022 && t >= 2)) {
-                        nomFile = `LTAIPEQArt66FraccIIB.T${t}${año.toString().slice(-2)}.xlsx`;
-                        extShow = "XLSX";
-                    } else if (año === 2022 && t === 1) {
-                         nomFile = "ORGANIGRAMA_COMITE_2021-2024.pdf";
-                         extShow = "PDF";
-                    } else if (año === 2021 && t === 4) {
-                        nomFile = "ORGANIGRAMA_COMITE_2021-2024.pdf";
-                        extShow = "PDF";
-                    } else if ((año === 2021 && t <= 3) || (año === 2020)) {
-                        nomFile = "organigrama_del_stsmj.pdf";
-                        extShow = "PDF";
+                let nomFile = "";
+
+                if (nombreDoc === "Gastos de representación") {
+                    const enRango = (año === 2022 && t >= 3) || 
+                                    (año > 2022 && año < 2026) || 
+                                    (año === 2026 && t === 1);
+                    
+                    if (enRango) {
+                        nomFile = `LTAIPEQArt66FraccVIII. T${t}${año.toString().slice(-2)}.xlsx`;
+                    } else {
+                        continue; 
                     }
-                    btn.href = nomFile || "#";
-                    if(nomFile) btn.setAttribute("download", nomFile);
-                }
-                // --- LÓGICA DE METAS Y OBJETIVOS ---
-                else if (nombreDoc === "Metas y Objetivos") {
-                    let nomFile = "";
-                    if ((año === 2020) || (año === 2021) || (año === 2022 && t === 1)) {
-                        nomFile = "OBJETIVOS-Y-METAS-INSTITUCIONALES-DEL-STSMJ.pdf";
-                        extShow = "PDF";
-                    } else if ((año === 2022 && t >= 2) || (año === 2023) || (año === 2024) || (año === 2025) || (año === 2026 && t === 1)) {
-                        nomFile = `LTAIPEQArt66FraccIIIB.T${t}${año.toString().slice(-2)}.xlsx`;
-                        extShow = "XLSX";
-                    }
-                    btn.href = nomFile || "#";
-                    if(nomFile) btn.setAttribute("download", nomFile);
-                }
-                // --- LÓGICA DE ESTATUTOS INTERNOS (NUEVA ACTUALIZACIÓN) ---
-                else if (nombreDoc === "Estatutos Internos") {
-                    let nomFile = "";
-                    // Histórico PDF (2020-T1 al 2022-T1)
-                    if ((año === 2020) || (año === 2021) || (año === 2022 && t === 1)) {
-                        nomFile = "ESTATUTOS-INTERNOS-DEL-S.T.S.M.J..pdf";
-                        extShow = "PDF";
-                    } 
-                    // XLSX (2022-T2 al 2026-T1)
-                    else if ((año === 2022 && t >= 2) || (año === 2023) || (año === 2024) || (año === 2025) || (año === 2026 && t === 1)) {
-                        nomFile = `LTAIPEQArt66FraccIIIA.T${t}${año.toString().slice(-2)}.xlsx`;
-                        extShow = "XLSX";
-                    }
-                    btn.href = nomFile || "#";
-                    if(nomFile) btn.setAttribute("download", nomFile);
-                }
-                // --- LÓGICA DE ESTRUCTURA ORGÁNICA ---
-                else if (nombreDoc === "Estructura orgánica") {
-                    if (año === 2022) {
-                        if (t === 2) btn.href = "LTAIPEQArt66FraccIIA.xlsx";
-                        else if (t === 3) btn.href = "LTAIPEQArt66-FraccIIA.xlsx";
-                        else if (t === 4) btn.href = "LTAIPEQArt66FraccIIA..xlsx";
-                    } else if (año >= 2023) {
-                        btn.href = `LTAIPEQArt66FraccIIA.T${t}${año.toString().slice(-2)}.xlsx`;
-                    }
-                    btn.setAttribute("download", btn.href);
-                } 
-                else {
-                    btn.href = "#";
                 }
 
-                btn.innerHTML = `Trimestre ${t} <span>${extShow}</span>`;
-                
-                if (btn.getAttribute("href") === "#") {
-                    btn.onclick = (e) => {
-                        e.preventDefault();
-                        alert(`El archivo solicitado para ${nombreDoc} (${año}-T${t}) no está disponible.`);
-                    };
+                else if (nombreDoc === "Directorio de Servidores Públicos") {
+                    if ((año === 2020) || (año === 2021 && t <= 3)) {
+                        nomFile = "DIRECTORIO COMITE.pdf"; extShow = "PDF";
+                    } else if (año === 2021 && t === 4) {
+                        nomFile = "LTAIPEQArt66FraccVI. T421.xlsx";
+                    } else if (año === 2022 && t === 1) {
+                        nomFile = "LTAIPEQArt66FraccVI. T122.xlsx";
+                    } else if (año === 2022 && t === 2) {
+                        nomFile = "LTAIPEQArt66FraccVI. T222.xlsx";
+                    } else if (año === 2022 && t === 3) {
+                        nomFile = "LTAIPEQArt66FraccVI. T322.xlsx";
+                    } else if (año === 2023 && t === 2) {
+                        nomFile = "LTAIPEQArt66FraccVI. T223.xlsx";
+                    }
+                    if (nomFile === "") continue;
                 }
-                cuerpo.appendChild(btn);
+                else if (nombreDoc === "Organigrama") {
+                    if ((año === 2026 && t === 1) || (año === 2025) || (año === 2024) || (año === 2023) || (año === 2022 && t >= 2)) {
+                        nomFile = `LTAIPEQArt66FraccIIB.T${t}${año.toString().slice(-2)}.xlsx`;
+                    } else if ((año === 2022 && t === 1) || (año === 2021 && t === 4)) {
+                         nomFile = "ORGANIGRAMA_COMITE_2021-2024.pdf"; extShow = "PDF";
+                    } else if ((año === 2021 && t <= 3) || (año === 2020)) {
+                        nomFile = "organigrama_del_stsmj.pdf"; extShow = "PDF";
+                    }
+                }
+                else if (nombreDoc === "Metas y Objetivos") {
+                    if ((año === 2020) || (año === 2021) || (año === 2022 && t === 1)) {
+                        nomFile = "OBJETIVOS-Y-METAS-INSTITUCIONALES-DEL-STSMJ.pdf"; extShow = "PDF";
+                    } else if ((año === 2022 && t >= 2) || (año === 2023) || (año === 2024) || (año === 2025) || (año === 2026 && t === 1)) {
+                        nomFile = `LTAIPEQArt66FraccIIIB.T${t}${año.toString().slice(-2)}.xlsx`;
+                    }
+                }
+                else if (nombreDoc === "Estatutos Internos") {
+                    if ((año === 2020) || (año === 2021) || (año === 2022 && t === 1)) {
+                        nomFile = "ESTATUTOS-INTERNOS-DEL-S.T.S.M.J..pdf"; extShow = "PDF";
+                    } else if ((año === 2022 && t >= 2) || (año === 2023) || (año === 2024) || (año === 2025) || (año === 2026 && t === 1)) {
+                        nomFile = `LTAIPEQArt66FraccIIIA.T${t}${año.toString().slice(-2)}.xlsx`;
+                    }
+                }
+                else if (nombreDoc === "Estructura orgánica") {
+                    if (año === 2022 && t >= 2) {
+                        nomFile = (t === 2) ? "LTAIPEQArt66FraccIIA.xlsx" : (t === 3) ? "LTAIPEQArt66-FraccIIA.xlsx" : "LTAIPEQArt66FraccIIA..xlsx";
+                    } else if (año >= 2023) {
+                        nomFile = `LTAIPEQArt66FraccIIA.T${t}${año.toString().slice(-2)}.xlsx`;
+                    }
+                }
+
+                if (nomFile !== "") {
+                    btn.href = nomFile;
+                    btn.setAttribute("download", nomFile);
+                    btn.innerHTML = `Trimestre ${t} <span>${extShow}</span>`;
+                    botonesDelAño.push(btn);
+                }
+            }
+
+            if (botonesDelAño.length > 0) {
+                const labelAño = document.createElement("div");
+                labelAño.className = "año-seccion";
+                labelAño.innerText = `Ejercicio ${año}`;
+                cuerpo.appendChild(labelAño);
+                botonesDelAño.forEach(b => cuerpo.appendChild(b));
             }
         }
         modal.style.display = "block";
@@ -342,11 +358,13 @@
         lista.forEach(item => {
             const div = document.createElement('div');
             div.className = 'articulo-card';
+            
+            // Lógica para botones: Se omite el span "No aplica" si es la Fracción XII
             const botones = item.opciones.length > 0 ? item.opciones.map(op => {
                 if (op === "Tabla de aplicabilidad") return `<a href="TABLA_ARTICULOS_66_Y_77.xlsx" download class="btn-directo">📊 Descargar Tabla (.xlsx)</a>`;
                 if (op === "Marco normativo") return `<a href="LTAIPEQArt66FraccI.xlsx" download class="btn-directo">⚖️ Descargar Marco Normativo (.xlsx)</a>`;
                 return `<button class="btn-interactivo" onclick="event.stopPropagation(); abrirModal('${op}')">📄 ${op}</button>`;
-            }).join('') : '<span class="no-aplica">No Aplica</span>';
+            }).join('') : (item.id === "XII" ? "" : '<span class="no-aplica">No Aplica</span>');
             
             const tagFraccion = item.id !== 'Tabla' ? `<span class="numero-fraccion">Fracción ${item.id}.</span>` : '';
             div.innerHTML = `<div class="articulo-header" onclick="this.parentElement.classList.toggle('active')"><div>${tagFraccion}<span class="titulo-fraccion">${item.titulo}</span></div><span>▼</span></div><div class="articulo-body"><span style="font-size: 0.8rem; color: #666; display:block; margin-bottom:10px;">Actualización: ${item.fecha}</span><p>${item.desc}</p><div class="panel-opciones">${botones}</div></div>`;
